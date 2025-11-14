@@ -1,0 +1,209 @@
+.plant-detail-container {
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding: 2rem;
+}
+
+.plant-detail-header {
+  margin-bottom: 2rem;
+}
+
+.plant-detail-content {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.plant-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.plant-image-container {
+  width: 100%;
+  height: 400px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+
+.plant-hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.plant-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.plant-3d-preview {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+
+.plant-info {
+  margin-top: 2rem;
+}
+
+.plant-name {
+  color: #333;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.scientific-name {
+  color: #666;
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.info-blocks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.info-block {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.info-block h3 {
+  margin: 0 0 0.5rem 0;
+  color: #667eea;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.info-block p {
+  margin: 0;
+  color: #333;
+  font-size: 1rem;
+}
+
+.description-section {
+  margin-bottom: 2rem;
+}
+
+.description-section h3 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.description-section p {
+  color: #666;
+  line-height: 1.6;
+}
+
+.pros-cons-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.pros,
+.cons {
+  padding: 1.5rem;
+  border-radius: 12px;
+}
+
+.pros {
+  background: #d4edda;
+}
+
+.cons {
+  background: #f8d7da;
+}
+
+.pros h3,
+.cons h3 {
+  margin: 0 0 1rem 0;
+  color: #333;
+}
+
+.pros p,
+.cons p {
+  margin: 0;
+  color: #333;
+  line-height: 1.6;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.btn-primary {
+  background: #667eea;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #5568d3;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.btn-secondary:hover {
+  background: #e0e0e0;
+}
+
+.btn-secondary.favorited {
+  background: #ffd700;
+  color: #333;
+}
+
+.error-message {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  .plant-hero {
+    grid-template-columns: 1fr;
+  }
+  
+  .pros-cons-section {
+    grid-template-columns: 1fr;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+}
+

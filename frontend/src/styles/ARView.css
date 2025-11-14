@@ -1,0 +1,141 @@
+.ar-view-container {
+  min-height: 100vh;
+  background: #000;
+  color: white;
+  padding: 1rem;
+}
+
+.ar-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.ar-header h2 {
+  color: white;
+  margin: 0;
+}
+
+.ar-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ar-instructions {
+  text-align: center;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.instruction-text {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.model-viewer-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: 1rem 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #1a1a1a;
+}
+
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  z-index: 10;
+}
+
+.ar-controls {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.ar-status {
+  margin-top: 1rem;
+  text-align: center;
+  color: #4caf50;
+  padding: 1rem;
+  background: rgba(76, 175, 80, 0.1);
+  border-radius: 8px;
+  max-width: 600px;
+}
+
+.ar-status.error {
+  color: #ff9800;
+  background: rgba(255, 152, 0, 0.1);
+}
+
+.ar-status p {
+  margin: 0.5rem 0;
+}
+
+.ar-tips {
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.error-overlay {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  background: rgba(255, 152, 0, 0.9);
+  color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  z-index: 20;
+  text-align: center;
+}
+
+.warning {
+  color: #ff9800;
+  font-weight: bold;
+}
+
+.ar-info {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  max-width: 600px;
+  text-align: left;
+}
+
+.ar-info p {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .ar-controls {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .ar-controls button {
+    width: 100%;
+  }
+}
+

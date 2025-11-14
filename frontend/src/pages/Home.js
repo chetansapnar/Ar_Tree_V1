@@ -1,31 +1,65 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import PlantCard from "../components/PlantCard";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import "../styles/Home.css";
 
 export default function Home() {
-  const [plants, setPlants] = useState([]);
-  const [city, setCity] = useState("");
+  const navigate = useNavigate();
 
-  const fetchPlants = async () => {
-    const res = await axios.get(`http://localhost:8000/plants/${city || "India"}`);
-    setPlants(res.data);
+  const handleDetectLocation = () => {
+    navigate("/permissions");
+  };
+
+  const handleBrowseAll = async () => {
+    navigate("/recommended-plants", { state: { region: "All", showAll: true } });
+  };
+
+  const handleViewFavorites = () => {
+    navigate("/favorites");
+  };
+
+  const handleLearn = () => {
+    navigate("/help");
   };
 
   return (
-    <div className="p-6">
-      <h1>🌿 GreenAR - Find the Best Tree for Your City</h1>
-      <input
-        type="text"
-        placeholder="Enter your city"
-        value={city}
-        onChange={(e) => setCity(e.target.value)}
-      />
-      <button onClick={fetchPlants}>Search</button>
+    <div className="home-container">
+      <div className="top-bar">
+        <div className="logo">🌿 GreenView AR</div>
+        <div className="top-bar-links">
+          <button className="link-btn" onClick={() => navigate("/help")}>
+            About
+          </button>
+          <button className="link-btn" onClick={() => navigate("/help")}>
+            Help
+          </button>
+          <button className="link-btn" onClick={() => navigate("/settings")}>
+            Settings
+          </button>
+        </div>
+      </div>
 
-      <div className="grid">
-        {plants.map((plant) => (
-          <PlantCard key={plant.id} plant={plant} />
-        ))}
+      <div className="home-content">
+        <div className="hero-section">
+          <h1 className="hero-title">Find the Perfect Tree for Your Region</h1>
+          <p className="hero-subtitle">
+            Allow location to get best recommendations.
+          </p>
+        </div>
+
+        <div className="cta-section">
+          <button className="cta-primary" onClick={handleDetectLocation}>
+            🌍 Detect My Location
+          </button>
+          <button className="cta-secondary" onClick={handleBrowseAll}>
+            📖 Browse All Plants
+          </button>
+          <button className="cta-secondary" onClick={handleViewFavorites}>
+            📂 My Shortlisted Plants
+          </button>
+          <button className="cta-secondary" onClick={handleLearn}>
+            ℹ Learn
+          </button>
+        </div>
       </div>
     </div>
   );
