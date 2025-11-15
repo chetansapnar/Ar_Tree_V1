@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { slugify } from "../utils/modelUtils";
+import { slugify, getImagePath } from "../utils/modelUtils";
 import "../styles/PlantCard.css";
 
 export default function PlantCard({ plant }) {
@@ -35,15 +35,17 @@ export default function PlantCard({ plant }) {
     }
   };
 
+  const resolvedImageSrc = getImagePath(plant.Name || plant.name, plant.image_url);
+
   return (
     <div className="plant-card">
       <div className="plant-card-image">
-        {plant.image_url ? (
+        {resolvedImageSrc ? (
           <img
-            src={plant.image_url}
+            src={resolvedImageSrc}
             alt={plant.Name}
             onError={(e) => {
-              // Replace unreachable external placeholders with an inline SVG data URI fallback
+              // Fallback to SVG placeholder if image doesn't exist
               const name = (plant.Name || "").replace(/&/g, "and");
               const svg = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='200'><rect width='100%' height='100%' fill='%231a1a1a'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23ffffff' font-family='Arial' font-size='20'>${encodeURIComponent(name)}</text></svg>`;
               e.currentTarget.src = svg;
@@ -68,8 +70,8 @@ export default function PlantCard({ plant }) {
           </p>
         )}
         <p className="plant-card-city">{plant.City || "India"}</p>
-        {plant.price && (
-          <p className="plant-card-price">₹{plant.price}</p>
+        {plant.carbon_offset && (
+          <p className="plant-card-carbon-offset">🌱 {plant.carbon_offset} kg CO₂/year</p>
         )}
         <div className="plant-card-buttons">
           <button className="btn-view-details" onClick={handleViewDetails}>

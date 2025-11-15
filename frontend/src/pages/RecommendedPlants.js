@@ -23,7 +23,8 @@ export default function RecommendedPlants() {
 
   useEffect(() => {
     fetchPlants();
-  }, [region]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [region, showAll]);
 
   useEffect(() => {
     applyFilters();
@@ -35,24 +36,29 @@ export default function RecommendedPlants() {
       setError(null);
       console.log("Fetching plants for region:", region, "showAll:", showAll);
       
+      // Configure axios with timeout to prevent infinite hanging
+      const axiosConfig = { timeout: 10000 }; // 10 second timeout
+      
       // If "All" or showAll flag, fetch all plants directly
       if (showAll || region === "All" || region === "all") {
         console.log("Fetching all plants...");
-        const allPlantsRes = await axios.get("http://192.168.43.102:8000/plants");
+        const allPlantsRes = await axios.get("http://192.168.43.72:8000/plants", axiosConfig);
         setPlants(allPlantsRes.data);
         setFilteredPlants(allPlantsRes.data);
+        setLoading(false);
         return;
       }
       
       // First try region-specific search
       const res = await axios.get(
-        `http://192.168.43.102:8000/plants/${region || "India"}`
+        `http://192.168.43.72:8000/plants/${region || "India"}`,
+        axiosConfig
       );
       
       // If no results found for region, fallback to all plants
       if (res.data && Array.isArray(res.data) && res.data.length === 0) {
         console.log("No plants found for region, fetching all plants...");
-        const allPlantsRes = await axios.get("http://192.168.43.102:8000/plants");
+        const allPlantsRes = await axios.get("http://192.168.43.72:8000/plants", axiosConfig);
         setPlants(allPlantsRes.data);
         setFilteredPlants(allPlantsRes.data);
       } else if (Array.isArray(res.data)) {
@@ -64,7 +70,7 @@ export default function RecommendedPlants() {
       // Try fallback to all plants
       try {
         console.log("Trying fallback to all plants...");
-        const res = await axios.get("http://192.168.43.102:8000/plants");
+        const res = await axios.get("http://192.168.43.72:8000/plants", { timeout: 10000 });
         if (Array.isArray(res.data)) {
           setPlants(res.data);
           setFilteredPlants(res.data);
@@ -74,9 +80,10 @@ export default function RecommendedPlants() {
         setError(null);
       } catch (fallbackError) {
         console.error("Fallback also failed:", fallbackError);
-        setError(
-          "Cannot connect to backend server. Please make sure the FastAPI server is running on http://192.168.43.102:8000"
-        );
+        const errorMessage = fallbackError.code === 'ECONNABORTED' || fallbackError.message?.includes('timeout')
+          ? "Request timed out. Please check if the backend server is running on http://192.168.43.72:8000"
+          : "Cannot connect to backend server. Please make sure the FastAPI server is running on http://192.168.43.72:8000";
+        setError(errorMessage);
         setPlants([]);
         setFilteredPlants([]);
       }
@@ -199,7 +206,7 @@ export default function RecommendedPlants() {
             <button className="btn-primary" onClick={() => {
               fetchPlants();
               // Force fetch all plants
-              axios.get("http://192.168.43.102:8000/plants")
+              axios.get("http://192.168.43.72:8000/plants")
                 .then(res => {
                   setPlants(res.data);
                   setFilteredPlants(res.data);

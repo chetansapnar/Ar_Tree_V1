@@ -10,7 +10,7 @@ app = FastAPI(title="GreenAR API - CSV Version")
 # Allow frontend access
 origins = [
     "http://localhost:3000",
-    "http://192.168.43.102:3000",
+    "http://192.168.43.72:3000",
 ]
 app.add_middleware(
     CORSMiddleware,
@@ -19,7 +19,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-FRONTEND_BASE = "http://192.168.43.102:3000"
+FRONTEND_BASE = "http://192.168.43.72:3000"
 
 def slugify(name: str) -> str:
     return "".join(c.lower() if c.isalnum() else "-" for c in str(name)).replace("--", "-").strip("-")
@@ -32,8 +32,15 @@ def attach_model_urls(df: pd.DataFrame) -> pd.DataFrame:
         # convert hyphens to underscores to match actual filenames like `teak_tree.glb`
         return quote(s.replace('-', '_'))
 
+    def image_filename(name: str) -> str:
+        s = slugify(name)
+        # convert hyphens to underscores to match actual filenames like `teak_tree.jpg`
+        return quote(s.replace('-', '_'))
+
     df["model_url"] = df["Name"].apply(lambda n: f"{FRONTEND_BASE}/models/{model_filename(n)}.glb")
     df["ios_model_url"] = df["Name"].apply(lambda n: f"{FRONTEND_BASE}/models/{model_filename(n)}.usdz")
+    # Override image_url with local path
+    df["image_url"] = df["Name"].apply(lambda n: f"{FRONTEND_BASE}/images/{image_filename(n)}.jpg")
     return df
 
 # Load data (relative path)

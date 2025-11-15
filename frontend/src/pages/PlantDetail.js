@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import "../styles/PlantDetail.css";
-import { getModelPath } from "../utils/modelUtils";
+import { getModelPath, getImagePath } from "../utils/modelUtils";
 
 // Local slugify helper used for matching slug -> plant name
 function slugify(name = "") {
@@ -29,6 +29,7 @@ export default function PlantDetail() {
   const [modelLoadError, setModelLoadError] = useState(null);
   const resolvedModelSrc = plant ? (plant.model_url || getModelPath(plant.Name || plant.name)) : null;
   const resolvedIosSrc = plant ? (plant.ios_model_url || (resolvedModelSrc ? resolvedModelSrc.replace('.glb', '.usdz') : null)) : null;
+  const resolvedImageSrc = plant ? getImagePath(plant.Name || plant.name, plant.image_url) : null;
 
   useEffect(() => {
     if (resolvedModelSrc) {
@@ -54,7 +55,7 @@ export default function PlantDetail() {
           try {
             setLoading(true);
             setError(null);
-            const res = await axios.get("http://192.168.43.102:8000/plants");
+            const res = await axios.get("http://192.168.43.72:8000/plants");
             if (Array.isArray(res.data)) {
               // find plant by slugified name
               const match = res.data.find(p => {
@@ -88,7 +89,7 @@ export default function PlantDetail() {
             try {
               setLoading(true);
               setError(null);
-              const res = await axios.get(`http://192.168.43.102:8000/plant/${encodeURIComponent(name)}`);
+              const res = await axios.get(`http://192.168.43.72:8000/plant/${encodeURIComponent(name)}`);
               if (res.data && !res.data.error) {
                 setPlant(res.data);
                 const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
@@ -183,9 +184,22 @@ export default function PlantDetail() {
       <div className="plant-detail-content">
         <div className="plant-hero">
           <div className="plant-image-container">
-            {plant.image_url ? (
-              <img src={plant.image_url} alt={plant.Name} className="plant-hero-image" />
-            ) : (
+            {resolvedImageSrc ? (
+              <img 
+                src={resolvedImageSrc} 
+                alt={plant.Name} 
+                className="plant-hero-image"
+                onError={(e) => {
+                  // Hide image and show placeholder if it fails to load
+                  e.currentTarget.style.display = 'none';
+                  const placeholder = e.currentTarget.nextElementSibling;
+                  if (placeholder && placeholder.classList.contains('plant-placeholder')) {
+                    placeholder.style.display = 'flex';
+                  }
+                }}
+              />
+            ) : null}
+            {!resolvedImageSrc && (
               <div className="plant-placeholder">No Image</div>
             )}
           </div>
@@ -247,8 +261,8 @@ export default function PlantDetail() {
             </div>
 
             <div className="info-block">
-              <h3>Approx. Price</h3>
-              <p>{plant.price ? `₹${plant.price.toLocaleString("en-IN")}` : "Not specified"}</p>
+              <h3>Carbon Offset</h3>
+              <p>{plant.carbon_offset ? `${plant.carbon_offset} kg CO₂/year` : "Not specified"}</p>
             </div>
 
             <div className="info-block">

@@ -54,3 +54,57 @@ export function getAvailableModels() {
   return AVAILABLE_MODELS.map(name => `/models/${name}`);
 }
 
+// Image utility functions
+const AVAILABLE_IMAGES = [
+  "adenium_obesum_i.jpg",
+  "bael_tree.jpg",
+  "coconut_tree.jpg",
+  "karanj_tree.jpg",
+  "neem_tree.jpg",
+  "peach_tree.jpg",
+  "pothos_plant.jpg",
+  "rhyzome_plant.jpg",
+  "teak_tree.jpg",
+];
+
+export function getImagePath(plantName, imageUrl = null) {
+  // If image_url is provided and it's a local path, use it
+  if (imageUrl && (imageUrl.startsWith('/images/') || imageUrl.includes('/images/'))) {
+    return imageUrl;
+  }
+  
+  // Build filename candidates from plant name
+  const name = (plantName || "").toString().toLowerCase().trim();
+  const cleaned = name.replace(/[^a-z0-9\s_-]/g, "");
+  const underscored = cleaned.replace(/\s+/g, "_");
+  const hyphened = cleaned.replace(/\s+/g, "-");
+  
+  // Try common image extensions
+  const extensions = ['.jpg', '.jpeg', '.png', '.webp'];
+  const candidates = [];
+  
+  for (const ext of extensions) {
+    candidates.push(`${underscored}${ext}`);
+    candidates.push(`${hyphened}${ext}`);
+  }
+  
+  // Check if any candidate exists in AVAILABLE_IMAGES
+  for (const cand of candidates) {
+    if (AVAILABLE_IMAGES.includes(cand)) {
+      return `/images/${cand}`;
+    }
+  }
+  
+  // Try slugified version
+  const slugLike = slugify(plantName).replace(/-/g, "_");
+  for (const ext of extensions) {
+    const candidate = `${slugLike}${ext}`;
+    if (AVAILABLE_IMAGES.includes(candidate)) {
+      return `/images/${candidate}`;
+    }
+  }
+  
+  // Fallback: return path based on plant name
+  return `/images/${underscored}.jpg`;
+}
+

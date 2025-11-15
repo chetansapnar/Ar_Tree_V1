@@ -15,7 +15,7 @@ export default function ErrorDisplay({ message, onRetry, onBack }) {
             <li>Navigate to the backend folder: <code>cd backend</code></li>
             <li>Install dependencies: <code>pip install -r requirements.txt</code></li>
             <li>Start the server: <code>python -m uvicorn main:app --reload</code></li>
-            <li>Make sure the server is running on <code>http://192.168.43.102:8000</code></li>
+            <li>Make sure the server is running on <code>http://192.168.43.72:8000</code></li>
           </ol>
         </div>
         <div className="error-actions">
