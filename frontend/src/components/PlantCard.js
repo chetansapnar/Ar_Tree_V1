@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { slugify } from "../utils/modelUtils";
 import "../styles/PlantCard.css";
 
 export default function PlantCard({ plant }) {
@@ -12,7 +13,8 @@ export default function PlantCard({ plant }) {
   }, [plant]);
 
   const handleViewDetails = () => {
-    navigate("/plant-detail", { state: { plant } });
+    const slug = slugify(plant.Name || plant.name || "");
+    navigate(`/plant-detail/${slug}`, { state: { plant } });
   };
 
   const handleViewAR = () => {
@@ -37,7 +39,16 @@ export default function PlantCard({ plant }) {
     <div className="plant-card">
       <div className="plant-card-image">
         {plant.image_url ? (
-          <img src={plant.image_url} alt={plant.Name} />
+          <img
+            src={plant.image_url}
+            alt={plant.Name}
+            onError={(e) => {
+              // Replace unreachable external placeholders with an inline SVG data URI fallback
+              const name = (plant.Name || "").replace(/&/g, "and");
+              const svg = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='200'><rect width='100%' height='100%' fill='%231a1a1a'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23ffffff' font-family='Arial' font-size='20'>${encodeURIComponent(name)}</text></svg>`;
+              e.currentTarget.src = svg;
+            }}
+          />
         ) : (
           <div className="plant-card-placeholder">🌿</div>
         )}

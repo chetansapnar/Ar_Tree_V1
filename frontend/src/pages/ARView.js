@@ -14,11 +14,30 @@ export default function ARView() {
   const [modelError, setModelError] = useState(null);
   const [loadPercent, setLoadPercent] = useState(null);
   const [cameraPermission, setCameraPermission] = useState(null);
+  const [arDiagnostics, setArDiagnostics] = useState({ canActivateAR: null, webxrSupported: null });
   const modelViewerRef = useRef(null);
 
   useEffect(() => {
     // Request camera permission when component mounts
     requestCameraPermission();
+    // perform initial AR diagnostics after small delay to let model-viewer initialize
+    const timer = setTimeout(async () => {
+      try {
+        const canActivate = modelViewerRef.current && typeof modelViewerRef.current.canActivateAR === 'function'
+          ? await modelViewerRef.current.canActivateAR().catch(() => null)
+          : null;
+        let webxr = null;
+        if (navigator.xr && navigator.xr.isSessionSupported) {
+          try {
+            webxr = await navigator.xr.isSessionSupported('immersive-ar');
+          } catch (e) { webxr = null; }
+        }
+        setArDiagnostics({ canActivateAR: canActivate, webxrSupported: webxr });
+      } catch (e) {
+        console.warn('AR diagnostics failed:', e);
+      }
+    }, 800);
+    return () => clearTimeout(timer);
   }, []);
 
   const requestCameraPermission = async () => {
@@ -192,12 +211,12 @@ export default function ARView() {
         </div>
 
         <div className="model-viewer-container">
-          {!modelLoaded && !modelError && loadPercent !== 100 && (
+          {/* {!modelLoaded && !modelError && loadPercent !== 100 && (
             <div className="loading-overlay">
               <div className="loader"></div>
               <p>Loading 3D model… {loadPercent != null ? `${loadPercent}%` : ""}</p>
             </div>
-          )}
+          )} */}
           {modelError && (
             <div className="error-overlay">
               <p>⚠️ {modelError}</p>
@@ -231,7 +250,23 @@ export default function ARView() {
           </button>
           <button
             className="btn-secondary"
-            onClick={() => navigate("/plant-detail", { state: { plant } })}
+            onClick={() => {
+              // manual Scene Viewer launch (use absolute URL)
+              const srcAttr = modelViewerRef.current?.getAttribute('src') || modelSrc;
+              const absolute = new URL(srcAttr, window.location.href).href;
+              const intentUrl = `intent://arvr.google.com/scene-viewer/1.0?file=${encodeURIComponent(absolute)}&mode=ar_preferred#Intent;scheme=https;package=com.google.android.googlequicksearchbox;action=android.intent.action.VIEW;end`;
+              window.location.href = intentUrl;
+            }}
+          >
+            🔗 Open Scene Viewer (manual)
+          </button>
+          <button
+            className="btn-secondary"
+            onClick={() => {
+              // navigate to slug route for consistent direct linking
+              const slug = (plant.Name || plant.name || "").toString().toLowerCase().trim().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+              navigate(`/plant-detail/${slug}`, { state: { plant } });
+            }}
           >
             View Details
           </button>
@@ -270,6 +305,13 @@ export default function ARView() {
             <p>⚠️ Using fallback model: {fallbackModel.split('/').pop()}</p>
           </div>
         )}
+
+        <div className="ar-diagnostics">
+          <h4>AR Diagnostics</h4>
+          <p>canActivateAR: {String(arDiagnostics.canActivateAR)}</p>
+          <p>WebXR immersive-ar supported: {String(arDiagnostics.webxrSupported)}</p>
+          <p>Model URL: {modelSrc}</p>
+        </div>
       </div>
     </div>
   );

@@ -21,6 +21,7 @@ function App() {
         <Route path="/location-fetch" element={<LocationFetch />} />
         <Route path="/recommended-plants" element={<RecommendedPlants />} />
         <Route path="/plant-detail" element={<PlantDetail />} />
+        <Route path="/plant-detail/:slug" element={<PlantDetail />} />
         <Route path="/ar-view" element={<ARView />} />
         <Route path="/favorites" element={<Favorites />} />
         <Route path="/help" element={<Help />} />

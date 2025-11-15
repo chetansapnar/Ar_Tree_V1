@@ -26,8 +26,14 @@ def slugify(name: str) -> str:
 
 def attach_model_urls(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
-    df["model_url"] = df["Name"].apply(lambda n: f"{FRONTEND_BASE}/models/{quote(slugify(n))}.glb")
-    df["ios_model_url"] = df["Name"].apply(lambda n: f"{FRONTEND_BASE}/models/{quote(slugify(n))}.usdz")
+    # Use underscore-separated filenames for model files (matches files in frontend/public/models)
+    def model_filename(name: str) -> str:
+        s = slugify(name)
+        # convert hyphens to underscores to match actual filenames like `teak_tree.glb`
+        return quote(s.replace('-', '_'))
+
+    df["model_url"] = df["Name"].apply(lambda n: f"{FRONTEND_BASE}/models/{model_filename(n)}.glb")
+    df["ios_model_url"] = df["Name"].apply(lambda n: f"{FRONTEND_BASE}/models/{model_filename(n)}.usdz")
     return df
 
 # Load data (relative path)

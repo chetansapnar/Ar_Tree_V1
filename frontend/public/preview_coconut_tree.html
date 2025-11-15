@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>AR Model Preview — Coconut</title>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.0.1/model-viewer.min.js"></script>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 0; padding: 16px; background:#0f1720; color:#eee }
+      .wrap { max-width:900px; margin:0 auto }
+      .viewer { width:100%; height:60vh; background:#000; border-radius:8px; overflow:hidden }
+      .info { margin-top:12px }
+      a.button { display:inline-block; padding:8px 12px; background:#0ea5a4; color:#042; border-radius:6px; text-decoration:none }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>AR Model Preview — Coconut Tree</h1>
+      <p class="info">This page loads the <code>/models/coconut_tree.glb</code> model. On mobile, use Chrome (Android) to trigger AR Scene Viewer or WebXR if supported.</p>
+
+      <div class="viewer">
+        <model-viewer
+          id="mv"
+          src="/models/coconut_tree.glb"
+          ios-src="/models/coconut_tree.usdz"
+          alt="Coconut Tree"
+          ar
+          ar-modes="webxr scene-viewer quick-look"
+          camera-controls
+          auto-rotate
+          style="width:100%; height:100%; background-color:#000"
+        ></model-viewer>
+      </div>
+
+      <div class="info">
+        <p>Buttons:</p>
+        <ul>
+          <li>On desktop: rotate/zoom the model with your mouse.</li>
+          <li>On mobile: an AR button should appear in the viewer UI — tap it to enter AR.</li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>
